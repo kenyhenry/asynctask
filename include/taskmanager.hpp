@@ -16,7 +16,17 @@ class TaskManager {
     std::mutex _mutex;
     std::thread _thread;
 
-    //construct & desctruct
+    void thread(){
+        while(_starting){
+            while(!_tasks.empty()){
+                //process task
+                for(Reader<T>* r : _readers)
+                    r->read(_tasks.front());
+                _tasks.pop();
+            }
+        }
+    }
+
     public:
     TaskManager() : _starting(false), _thread{}{};
         
@@ -26,29 +36,19 @@ class TaskManager {
         _readers.push_back(reader);
     }
 
-    //task management
-    public:    
     void addTask(std::shared_ptr<Task<T>> task){
         _tasks.push(task);
     }
     
     void start(){
-        if(std::try_lock(_mutex))
-            _thread = std::thread(thread());
         _starting = true;
+        std::unique_lock<std::mutex> lock(_mutex);
+        _thread = std::thread(&TaskManager::thread, this);
+        _thread.detach();
     }
     
     void stop(){
-         std::try_lock(_mutex);
+         std::unique_lock<std::mutex> lock(_mutex);
         _starting = false;
-    }
-    
-    void thread(){
-         while(!_tasks.empty() && _starting){
-            //process task
-            for(Reader<T>* r : _readers)
-                r->read(_tasks.front());
-            _tasks.pop();
-        }
     }
 };

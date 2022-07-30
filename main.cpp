@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include "taskmanager.hpp"
 #include "task_test.hpp"
 #include "reader_test.hpp"
@@ -6,8 +7,8 @@
 int main(){
 
     Reader<TaskId> *reader = new ReaderTest();
-    TaskManager<TaskId> taskbox;
-    taskbox.addReader(reader);
+    TaskManager<TaskId>* taskManager = new TaskManager<TaskId>();
+    taskManager->addReader(reader);
 
     RedLightOn redOn;
     RedLightOff redOff;
@@ -21,15 +22,24 @@ int main(){
     WaterOn watOn;
     WaterOff watOff;
 
-    taskbox.addTask(std::make_shared<RedLightOn>(redOn));
-    taskbox.addTask(std::make_shared<RedLightOff>(redOff));
-    taskbox.addTask(std::make_shared<BlueLightOn>(blueOn));
-    taskbox.addTask(std::make_shared<BlueLightOff>(blueOff));
-    taskbox.addTask(std::make_shared<ExtractorOn>(exOn));
-    taskbox.addTask(std::make_shared<ExtractorOff>(exOff));
-    taskbox.addTask(std::make_shared<WaterOn>(watOn));
-    taskbox.addTask(std::make_shared<WaterOff>(watOff));
+    taskManager->addTask(std::make_shared<RedLightOn>(redOn));
+    taskManager->addTask(std::make_shared<RedLightOff>(redOff));
+    taskManager->addTask(std::make_shared<BlueLightOn>(blueOn));
+    taskManager->addTask(std::make_shared<BlueLightOff>(blueOff));
+    taskManager->addTask(std::make_shared<ExtractorOn>(exOn));
+    taskManager->addTask(std::make_shared<ExtractorOff>(exOff));
+    taskManager->addTask(std::make_shared<WaterOn>(watOn));
+    taskManager->addTask(std::make_shared<WaterOff>(watOff));
 
-    taskbox.start();
+    taskManager->start();
+    int x = 0;
+    while(1){
+    std::cout << "test " << x << std::endl;
+    sleep(1);
+    ++x;
+    //taskManager->stop();
+    if(x == 5)
+        taskManager->addTask(std::make_shared<RedLightOn>(redOn));
+    }
     return 0;
 }
