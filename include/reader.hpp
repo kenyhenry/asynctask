@@ -7,5 +7,5 @@ template<typename T>
 class Reader{
     public: 
         Reader(){};
-        virtual void read(std::shared_ptr<Task<T>> task){};
+        virtual void read(Task<T>* task){};
 };
