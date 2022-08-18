@@ -16,8 +16,8 @@ int main(){
     // test task prog
     std::time_t now = std::time(nullptr);
 
-    // taskbox->addTaskProg(RedLightOn(), RedLightOff(), 5, 3, now, now+10);
-    // taskbox->addTaskProg(WaterOn(), WaterOff(), 0, 0, now, now+5);
+    std::string uuid_red = taskbox->addTaskProg(RedLightOn(), RedLightOff(), 5, 3, now, now+20);
+    std::string uuid_water = taskbox->addTaskProg(WaterOn(), WaterOff(), now, now+15);
 
     // begin loop threads
     taskbox->start();
@@ -27,8 +27,12 @@ int main(){
         sleep(1);
         ++x;
 
-        // test to stop taskbox when needed (not working)
-        if(x == 5)
+        // disable task (not working)
+        if(x == 10)
+            taskbox->disableTaskProg(uuid_red);
+
+        // test to stop taskbox when needed (working)
+        if(x == 20)
             taskbox->stop();
     }
     return 0;

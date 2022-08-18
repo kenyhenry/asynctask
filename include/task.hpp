@@ -10,7 +10,7 @@ class Task{
     bool _ready;
 
     public:
-    uuid_t uuid;
+    uuid_string_t uuid;
     int exec_time;
     T type;
 
@@ -19,7 +19,7 @@ class Task{
     Task(Task const& t){
         type = t.type;
         std::cout << (int)type << std::endl;
-        uuid_copy(uuid, t.uuid); 
+        strcpy(uuid, t.uuid); 
     };
     bool isReady(){return _ready;};
     void ready(){_ready = true;};
