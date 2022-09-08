@@ -6,7 +6,6 @@
 #include <thread>
 #include <unistd.h>
 #include <uuid/uuid.h>
-#include "reader.hpp"
 #include "task.hpp"
 #include "utils.hpp"
 
@@ -30,7 +29,6 @@ class TaskManager {
     std::thread _thread;
     std::thread _prog_thread;
 
-    std::vector<Reader<T>*> _readers;
     std::queue<Task<T>*> _tasks;
     std::priority_queue<Task<T>*, std::vector<Task<T>*>, Compare_task> _prog_tasks;
     std::vector<std::string> _disabled_task;
@@ -40,9 +38,7 @@ class TaskManager {
             while(!_tasks.empty()){
                 //process task
                 _mutex.lock();
-                for(Reader<T>* r : _readers){
-                    r->read(_tasks.front());
-                }
+                _tasks.front()->execute();
                 _tasks.pop();
                 _mutex.unlock();
             }
@@ -73,10 +69,6 @@ class TaskManager {
     TaskManager() : _starting(false), _thread{}, _prog_thread{}{};
         
     ~TaskManager(){}
-    
-    void addReader(Reader<T> *reader){
-        _readers.push_back(reader);
-    }
 
     void addTask(Task<T>* task){
         _mutex.lock();

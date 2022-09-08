@@ -1,14 +1,11 @@
 #include <unistd.h>
 #include "taskmanager.hpp"
 #include "task_test.hpp"
-#include "reader_test.hpp"
 
 int main(){
 
     //init
-    Reader<TaskId> *reader = new ReaderTest();
     TaskManager<TaskId>* taskbox = new TaskManager<TaskId>();
-    taskbox->addReader(reader);
 
     // simple test task add
     taskbox->addTask(new ExtractorOn());
