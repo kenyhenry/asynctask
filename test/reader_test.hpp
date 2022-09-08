@@ -9,8 +9,6 @@ class ReaderTest : public Reader<TaskId>{
     public: 
         ReaderTest(){};
         void read(Task<TaskId> *task) override{
-            // std::cout << "address = " << std::hex << task << std::endl;
-            std::cout << "uuid = " << task->uuid << std::endl;
             std::cout  << "read type = " << (int)task->type << std::endl;
             switch(task->type){
                 case TaskId::redLightOn:{
