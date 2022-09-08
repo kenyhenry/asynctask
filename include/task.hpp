@@ -6,7 +6,6 @@
 
 template<typename T>
 class Task{
-    private:
     bool _ready;
 
     public:
@@ -16,11 +15,13 @@ class Task{
 
     public:
     Task() : _ready{false}, exec_time{0}{};
-    Task(Task const& t){
-        type = t.type;
+
+    //create new task from existing (no need)
+    Task(Task const* t){
         std::cout << (int)type << std::endl;
-        strcpy(uuid, t.uuid); 
+        strcpy(uuid, t->uuid); 
     };
+
     bool isReady(){return _ready;};
     void ready(){_ready = true;};
 };

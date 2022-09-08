@@ -6,7 +6,7 @@
 int main(){
 
     //init
-    Reader<TaskId> *reader = new ReaderTest();
+    ReaderTest *reader = new ReaderTest();
     TaskManager<TaskId>* taskbox = new TaskManager<TaskId>();
     taskbox->addReader(reader);
 
@@ -16,8 +16,8 @@ int main(){
     // test task prog
     std::time_t now = std::time(nullptr);
 
-    std::string uuid_red = taskbox->addTaskProg(RedLightOn(), RedLightOff(), 5, 3, now, now+20);
-    std::string uuid_water = taskbox->addTaskProg(WaterOn(), WaterOff(), now, now+15);
+    std::string uuid_red = taskbox->addTaskProg(new RedLightOn(), new RedLightOff(), 5, 3, now, now+20);
+    std::string uuid_water = taskbox->addTaskProg(new WaterOn(),new WaterOff(), now, now+15);
 
     // begin loop threads
     taskbox->start();

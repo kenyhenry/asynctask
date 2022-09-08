@@ -84,8 +84,8 @@ class TaskManager {
         _mutex.unlock();
     }
 
-    std::string addTaskProg(Task<T> templateTaskOn, 
-                     Task<T> templateTaskOff, 
+    std::string addTaskProg(Task<T>* templateTaskOn, 
+                     Task<T>* templateTaskOff, 
                      int every, 
                      int during, 
                      int from, 
@@ -120,8 +120,8 @@ class TaskManager {
         return uuid_string;
     }
 
-    std::string addTaskProg(Task<T> templateTaskOn, 
-                     Task<T> templateTaskOff, 
+    std::string addTaskProg(Task<T>* templateTaskOn, 
+                     Task<T>* templateTaskOff, 
                      int from, 
                      int to){
         uuid_t uuid;
