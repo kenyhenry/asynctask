@@ -5,52 +5,42 @@
 
 enum class TaskId{redLightOn=0, redLightOff, blueLightOn, blueLightOff, extractorOn, extractorOff, waterOn, waterOff};
 
-struct RedLightOn : public Task<TaskId> {
-    RedLightOn(){
-        type=TaskId::redLightOn;
-    };
+struct RedLightOn{
+    static constexpr TaskId type = TaskId::redLightOn;
+    int x;
 };
 
-struct RedLightOff : public Task<TaskId> {
-    RedLightOff(){
-        type=TaskId::redLightOff;
-    };
+struct RedLightOff{
+    static constexpr TaskId type=TaskId::redLightOff;
+    int x;
 };
 
-struct BlueLightOn : public Task<TaskId> {
-    BlueLightOn(){
-        type=TaskId::blueLightOn;
-    };
+struct BlueLightOn{
+    static constexpr TaskId type=TaskId::blueLightOn;
+    int x;
 };
 
-struct BlueLightOff : public Task<TaskId> {
-    BlueLightOff(){
-        type=TaskId::blueLightOff;
-    };
+struct BlueLightOff{
+    static constexpr TaskId type=TaskId::blueLightOff;
+    int x;
 };
 
-struct ExtractorOn : public Task<TaskId> {
-    ExtractorOn(){
-        type=TaskId::extractorOn;
-    };
+struct ExtractorOn{
+    static constexpr TaskId type=TaskId::extractorOn;
+    int x;
 };
 
-struct ExtractorOff : public Task<TaskId> {
-    public:
-    ExtractorOff(){
-        type=TaskId::extractorOff;
-    };
-
+struct ExtractorOff{
+    static constexpr TaskId type=TaskId::extractorOff;
+    int x;
 };
 
-struct WaterOn : public Task<TaskId> {
-    WaterOn(){
-        type=TaskId::waterOn;
-    };
+struct WaterOn{
+    static constexpr TaskId type=TaskId::waterOn;
+    int x;
 };
 
-struct WaterOff : public Task<TaskId> {
-    WaterOff(){
-        type=TaskId::waterOff;
-    };
+struct WaterOff{
+    const TaskId type=TaskId::waterOff;
+    int x;
 };

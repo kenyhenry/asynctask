@@ -21,7 +21,7 @@ class Compare_task{
     }
 };
 
-template<typename T>
+template<class T>
 class TaskManager {
     private:
     bool _starting;
@@ -31,7 +31,7 @@ class TaskManager {
     std::thread _prog_thread;
 
     std::vector<Reader<T>*> _readers;
-    std::queue<Task<T>*> _tasks;
+    std::queue<std::unique_ptr<Task<T>>> _tasks;
     std::priority_queue<Task<T>*, std::vector<Task<T>*>, Compare_task> _prog_tasks;
     std::vector<std::string> _disabled_task;
 
@@ -40,9 +40,12 @@ class TaskManager {
             while(!_tasks.empty()){
                 //process task
                 _mutex.lock();
-                for(Reader<T>* r : _readers){
-                    r->read(_tasks.front());
+                if(!_readers.empty()){
+                    for(Reader<T>* r : _readers){
+                        r->read(_tasks.front().get());
+                    }
                 }
+                _tasks.front().release();
                 _tasks.pop();
                 _mutex.unlock();
             }
@@ -78,81 +81,89 @@ class TaskManager {
         _readers.push_back(reader);
     }
 
-    void addTask(Task<T>* task){
+    template <typename U, typename ...Args>
+    void addTask(Args... args){
         _mutex.lock();
-        _tasks.emplace(task);
+        auto t = create_task<U>(std::forward<Args>(args)...);
+        _tasks.emplace(std::move(t));
         _mutex.unlock();
     }
 
-    std::string addTaskProg(Task<T>* templateTaskOn, 
-                     Task<T>* templateTaskOff, 
-                     int every, 
+    void addTaskProg(int every, 
                      int during, 
                      int from, 
-                     int to){
-        uuid_t uuid;
-        uuid_generate(uuid);
-        uuid_string_t uuid_string;
-        uuid_unparse(uuid, uuid_string);
+                     int to, 
+                     Args... args){}
 
-        for(int x = from; x <= to; x += every){  
-            // create new task
-            Task<T>* taskOn = new Task<T>(templateTaskOn);
-            Task<T>* taskOff = new Task<T>(templateTaskOff);
-            // fill with uuid
-            strcpy(taskOn->uuid, uuid_string); 
-            strcpy(taskOff->uuid, uuid_string); 
-            // set time execution for taskOn & taskOff
-            taskOn->exec_time = x;
-            taskOff->exec_time = x + during;
-            // place in priority queue
-            _prog_tasks.emplace(taskOn);
-            _prog_tasks.emplace(taskOff);
-            // to avoid last command send is On state
-            if(x + during > to){
-                Task<T>* lastTaskOff = new Task<T>(templateTaskOff);
-                strcpy(lastTaskOff->uuid, uuid_string); 
-                lastTaskOff->exec_time = to;
-                _prog_tasks.emplace(lastTaskOff);
-            }
-        }
+    // std::string addTaskProg(Task<T>* templateTaskOn, 
+    //                  Task<T>* templateTaskOff, 
+    //                  int every, 
+    //                  int during, 
+    //                  int from, 
+    //                  int to){
+    //     uuid_t uuid;
+    //     uuid_generate(uuid);
+    //     uuid_string_t uuid_string;
+    //     uuid_unparse(uuid, uuid_string);
 
-        return uuid_string;
-    }
+    //     for(int x = from; x <= to; x += every){  
+    //         // create new task
+    //         Task<T>* taskOn = new Task<T>(templateTaskOn);
+    //         Task<T>* taskOff = new Task<T>(templateTaskOff);
+    //         // fill with uuid
+    //         strcpy(taskOn->uuid, uuid_string); 
+    //         strcpy(taskOff->uuid, uuid_string); 
+    //         // set time execution for taskOn & taskOff
+    //         taskOn->exec_time = x;
+    //         taskOff->exec_time = x + during;
+    //         // place in priority queue
+    //         _prog_tasks.emplace(taskOn);
+    //         _prog_tasks.emplace(taskOff);
+    //         // to avoid last command send is On state
+    //         if(x + during > to){
+    //             Task<T>* lastTaskOff = new Task<T>(templateTaskOff);
+    //             strcpy(lastTaskOff->uuid, uuid_string); 
+    //             lastTaskOff->exec_time = to;
+    //             _prog_tasks.emplace(lastTaskOff);
+    //         }
+    //     }
 
-    std::string addTaskProg(Task<T>* templateTaskOn, 
-                     Task<T>* templateTaskOff, 
-                     int from, 
-                     int to){
-        uuid_t uuid;
-        uuid_generate(uuid);
-        uuid_string_t uuid_string;
-        uuid_unparse(uuid, uuid_string);
-        // create new task
-        Task<T>* taskOn = new Task<T>(templateTaskOn);
-        Task<T>* taskOff = new Task<T>(templateTaskOff);
-        // fill with uuid
-        strcpy(taskOn->uuid, uuid_string); 
-        strcpy(taskOff->uuid, uuid_string); 
-        // set time execution for taskOn & taskOff
-        taskOn->exec_time = from;
-        taskOff->exec_time = to;
-        // place in priority queue
-        _prog_tasks.emplace(taskOn);
-        _prog_tasks.emplace(taskOff);
+    //     return uuid_string;
+    // }
+
+    // std::string addTaskProg(Task<T>* templateTaskOn, 
+    //                  Task<T>* templateTaskOff, 
+    //                  int from, 
+    //                  int to){
+    //     uuid_t uuid;
+    //     uuid_generate(uuid);
+    //     uuid_string_t uuid_string;
+    //     uuid_unparse(uuid, uuid_string);
+    //     // create new task
+    //     Task<T>* taskOn = new Task<T>(templateTaskOn);
+    //     Task<T>* taskOff = new Task<T>(templateTaskOff);
+    //     // fill with uuid
+    //     strcpy(taskOn->uuid, uuid_string); 
+    //     strcpy(taskOff->uuid, uuid_string); 
+    //     // set time execution for taskOn & taskOff
+    //     taskOn->exec_time = from;
+    //     taskOff->exec_time = to;
+    //     // place in priority queue
+    //     _prog_tasks.emplace(taskOn);
+    //     _prog_tasks.emplace(taskOff);
         
-        return uuid_string;
-    }
+    //     return uuid_string;
+    // }
 
-    void disableTaskProg(std::string uuidToDisable){
-        _disabled_task.push_back(uuidToDisable);
-    }
+    // void disableTaskProg(std::string uuidToDisable){
+    //     _disabled_task.push_back(uuidToDisable);
+    // }
     
     void start(){
         _starting = true;
         _mutex.lock();
         _thread = std::thread(&TaskManager::thread, this);
-        _prog_thread = std::thread(&TaskManager::thread_prog, this);
+        // _prog_thread = std::thread(&TaskManager::thread_prog, this);
         _thread.detach();
         _mutex.unlock();
     }
@@ -163,3 +174,4 @@ class TaskManager {
         _mutex.unlock();
     }
 };
+
