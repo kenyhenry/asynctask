@@ -89,12 +89,6 @@ class TaskManager {
         _mutex.unlock();
     }
 
-    void addTaskProg(int every, 
-                     int during, 
-                     int from, 
-                     int to, 
-                     Args... args){}
-
     // std::string addTaskProg(Task<T>* templateTaskOn, 
     //                  Task<T>* templateTaskOff, 
     //                  int every, 
