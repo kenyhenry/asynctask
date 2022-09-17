@@ -58,7 +58,6 @@ class TaskManager {
                 // check for disable task to pop
                 for(std::string uuid_disabled : _disabled_task){
                     if(!strcmp(_prog_tasks.top().uuid, uuid_disabled.c_str())){
-                        std::cout << "task disable pop " << std::endl;
                         _prog_mutex.lock();
                         _prog_tasks.pop();
                         _prog_mutex.unlock();
@@ -68,7 +67,6 @@ class TaskManager {
                 // check if taskProg is ended
                 if(_prog_tasks.top().exec_time > (_prog_tasks.top().to - _prog_tasks.top().every)){
                     std::time_t now = std::time(nullptr);
-                    std::cout << "delete task prog " << (int)_prog_tasks.top().type << std::endl;
                     _prog_mutex.lock();
                     _prog_tasks.pop();
                     _prog_mutex.unlock();
