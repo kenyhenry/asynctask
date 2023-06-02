@@ -1,3 +1,10 @@
 build/
 bin/
 .vscode/
+CMakeFiles
+
+# Ignore CMake generated files
+CMakeCache.txt
+CMakeLists.txt.user
+cmake_install.cmake
+Makefile

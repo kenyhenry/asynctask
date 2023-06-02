@@ -17,7 +17,8 @@ include_directories(./include ./src)
 file(GLOB_RECURSE SRCS ${PROJECT_SOURCE_DIR}/src/*.cpp)
 file(GLOB_RECURSE HDRS ${PROJECT_SOURCE_DIR}/include/*.hpp)
 
-add_library(${PROJECT_NAME} SHARED ${SRCS} ${HDRS})
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME} INTERFACE ${HDRS})
 
 ########
 # TEST #
