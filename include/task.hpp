@@ -1,4 +1,4 @@
-#pragma once  
+#pragma once
 
 #include <mutex>
 #include <uuid/uuid.h>
@@ -12,7 +12,7 @@ class Task{
     public:
     T type;
 
-    // data for planned or program task 
+    // data for planned or program task
     uuid_string_t uuid;
     int exec_time;
     int from;
@@ -20,5 +20,5 @@ class Task{
     int every;
 
     public:
-    Task(T taskType) : type{taskType}{};
+    Task(T taskType) : type(taskType){};
 };

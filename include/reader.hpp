@@ -5,7 +5,7 @@
 
 template<typename T>
 class Reader{
-    public: 
+    public:
         Reader(){};
         virtual void read(Task<T>* task){};
 };
