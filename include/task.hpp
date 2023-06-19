@@ -1,5 +1,10 @@
 #pragma once
 
+#ifndef uuid_string_t
+    #define SIZEOF_UUID sizeof(uuid_t)+1
+    typedef char  uuid_string_t[SIZEOF_UUID];
+#endif
+
 #include <mutex>
 #include <uuid/uuid.h>
 #include <iostream>

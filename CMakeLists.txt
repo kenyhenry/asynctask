@@ -31,4 +31,7 @@ if(ENABLE_TEST)
 
     add_executable(${PROJECT_NAME}_test ${SRCSTEST} ${HDRSTEST} ./test/main.cpp)
     target_link_libraries(${PROJECT_NAME}_test PRIVATE taskmanager)
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE pthread)
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE uuid)
+    
 endif()

@@ -9,6 +9,7 @@
 #include "reader.hpp"
 #include "task.hpp"
 #include "utils.hpp"
+#include <cstring>
 
 class Compare_task{
     public:
@@ -126,7 +127,9 @@ class TaskManager {
         tp.every = every;
         tp.exec_time = from;
 
+        _prog_mutex.lock();
         _prog_tasks.emplace(tp);
+        _prog_mutex.unlock();
 
         return uuid_string;
     }
